@@ -1,0 +1,334 @@
+body {
+    background-color: black;
+}
+
+/*home page*/
+#homepage{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 80px;
+}
+
+#get_started{
+    margin: 50px;
+    font-size: 25px;
+}
+
+/*information page*/
+#information{
+    display: flex;
+    flex-direction: column;
+    gap: 100px;
+    text-align: center;
+    font-size: 190%;
+}
+
+#gender{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding-top: 25px;
+    padding-left: 400px;
+}
+
+#age{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding-left: 430px;
+}
+
+#weight{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding-left: 400px;
+}
+
+#height{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding-left: 410px;
+}
+
+#activity{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding-left: 400px;
+}
+
+#calculate{
+    display: flex;
+    padding-left: 1200px;
+}
+#calculate_button{
+    font-size: 20px;
+}
+
+/*current body page*/
+#current_body{
+    font-size: 25px;
+}
+
+#current_body_type{
+    font-weight: bold;
+    margin-left: 140px;
+    margin-top: 80px;
+    font-size: 30px;
+    text-decoration: underline;
+}
+
+#male_under1{
+    border-style: solid;
+    border-color: transparent;
+    border-radius: 20px;
+    border-width: 5px;
+    width: 300px;
+    height: 645px;
+}
+
+#male_normal1{
+    border-style: solid;
+    border-color: transparent;
+    border-radius: 20px;
+    border-width: 5px;
+    width: 300px;
+    height: 645px;
+}
+
+#male_over1{
+    border-style: solid;
+    border-color: transparent;
+    border-radius: 20px;
+    border-width: 5px;
+    width: 300px;
+    height: 645px;
+}
+
+#female_under1{
+    border-style: solid;
+    border-color: transparent;
+    border-radius: 20px;
+    border-width: 5px;
+    width: 300px;
+    height: 645px;
+}
+
+#female_normal1{
+    border-style: solid;
+    border-color: transparent;
+    border-radius: 20px;
+    border-width: 5px;
+    width: 300px;
+    height: 645px;
+}
+
+#female_over1{
+    border-style: solid;
+    border-color: transparent;
+    border-radius: 20px;
+    border-width: 5px;
+    width: 300px;
+    height: 645px;
+}
+
+#body_images{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding-top: 5px;
+}
+
+#to_body{
+    position: relative;
+    top: 100px;
+    left: 600px;
+    width: 40%;
+    font-size: 20px;
+}
+
+/*Body goals page*/
+#body_goal{
+    font-size: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+#goals_text{
+    font-weight: bold;
+    margin-left: 200px;
+    margin-top: 150px;
+    font-size: 30px;
+    text-decoration: underline;
+}
+
+#goals{
+    display: flex;
+    padding-left: 310px;
+    padding-top: 200px;
+    width: 85%;
+}
+
+#to_diet{
+    position: relative;
+    top: 300px;
+    left: 900px;
+    width: 10%;
+    font-size: 25px;
+}
+
+/*diet preference*/
+#diet{
+    font-size: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+#diets{
+    display: flex;
+    padding-left: 350px;
+    padding-top: 200px;
+    width: 85%;
+}
+
+#diet_text{
+    font-weight: bold;
+    margin-left: 200px;
+    margin-top: 150px;
+    font-size: 30px;
+    text-decoration: underline;
+}
+
+#to_feed{
+    position: relative;
+    top: 300px;
+    left: 900px;
+    width: 10%;
+    font-size: 25px;
+}
+
+/*Page content on bottom in case of conflicts*/
+.LunchBox{
+    background-color: #faf8f0 /*rgb(173, 220, 202)*/;
+    width: 100%;
+    height: 100%;
+}
+
+.logo{
+    font-size: 250%;
+    text-align: center;
+}
+
+/*darian/jacob*/
+.feed-entry{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.feed-title{
+    width: 470px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.item{
+    height: 100px;
+    width: 100px;
+}
+
+.pics{
+    height: 470px;
+    width: 470px;
+}
+
+.btn{
+    margin-top: 10px;
+    background-color: #9dc183;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    height: 45px;
+    width: 90px;
+    margin-bottom: 20px;
+}
+
+#insert_text{
+    width: 470px;
+}
+
+#insert_chicken{
+    width: 470px;
+}
+
+#insert_veg{
+    width: 470px;
+}
+
+/*phil*/
+#shopping-cart {
+    background-color: #faf8f0;
+}
+
+.sticky-tab {
+    position: fixed;
+    width: 100%;
+    height: 50px;
+    top: 0;
+    background-color: #AEBE89;
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: #657541;
+    font-weight: bold;
+}
+
+#wrapper {
+    width: 1000px;
+    height: 100vh;
+    margin: 50px auto 0px;
+}
+
+.macro-num {
+    color: #faf8f0;
+}
+
+#main-body {
+    padding-top: 50px;
+    display: flex;
+}
+
+.recipe-card-image img {
+    width: 140px;
+    height: 70px;
+    margin: 0 auto;
+}
+
+.list-no-style {
+    list-style-type: none;
+}
+
+#recipe-list {
+    width: 100%;
+}
+
+.recipe-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    padding: 15px;
+}

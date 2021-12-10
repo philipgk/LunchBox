@@ -1,0 +1,295 @@
+<html>
+
+<title>LunchBox</title>
+
+<!--jQuery-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- JS/Vue -->
+<script src='scripts/page.js' defer></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+<!-- CSS -->
+<link rel="stylesheet" type="text/css" href="style/index.css">
+
+<!--Semantic UI-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+
+
+<!-- HTML -->
+<body>
+    <div class="LunchBox">
+        <div id="homepage">
+            <p>LunchBöx</p>
+            <div class="ui animated blue button" tabindex="0" id="get_started">
+                <div class="visible content">Get Started</div>
+                <div class="hidden content">
+                <i class="right arrow icon"></i>
+                </div>
+            </div>
+        </div>
+        <div id="information">
+            <span class="logo">
+                <p>LunchBöx</p>
+            </span>
+            <div id="gender">
+                Gender
+                <div class="ui large buttons">
+                    <button class="ui button" id="male">Male</button>
+                    <div class="or"></div>
+                    <button class="ui button" id="female">Female</button>
+                </div>
+            </div>
+            <div id="age">
+                Age
+                <div class="ui input">
+                    <input type="text" placeholder="Enter number.." id="age_input">
+                </div>
+            </div>
+            <div id="weight">
+                Weight
+                <div class="ui right labeled input">
+                    <input type="text" placeholder="Enter weight.." id="weight_input">
+                    <div class="ui basic label">
+                    lbs
+                    </div>
+                </div>
+            </div>
+            <div id="height">
+                Height
+                <div class="ui right labeled input">
+                    <input type="text" placeholder="Enter Feet.." id="ft_input">
+                    <div class="ui basic label">
+                      ft
+                    </div>
+                </div>
+                <div class="ui right labeled input">
+                    <input type="text" placeholder="Enter Inches.." id="in_input">
+                    <div class="ui basic label">
+                      in
+                    </div>
+                </div>
+            </div>
+            <div id="activity">
+                Activity
+                <select name="exercise" id="exercise">
+                    <option value="sedentary">Sedentary (Office Job)</option>
+                    <option value="light">Light Exercise (1-2 days/week)</option>
+                    <option value="moderate">Moderate Exercise (3-5 days/week)</option>
+                    <option value="heavy">Heavy Exercise (6-7 days/week)</option>
+                    <option value="athlete">Athlete (2x per day)</option>
+                </select>
+            </div>
+            <div id="calculate">
+                <button class="ui blue button" id="calculate_button">Next</button>
+            </div>
+        </div>
+        <div id="current_body">
+            <span class="logo">
+                <p>LunchBöx</p>
+            </span>
+            <p id="current_body_type">What is your current body type?</p>
+            <div class="ui medium images" id="male_body">
+                <div id = "body_images">
+                    <a href="#" id="male_under"><img src="src/male_underweight.jpg" style="padding: 30px;" id="male_under1"></a> 
+                    <a href="#" id="male_normal"><img src="src/male_normalweight.jpg" style="padding: 30px;" id="male_normal1"></a>
+                    <a href="#" id="male_over"><img src="src/male_overweight.jpg" style="padding: 30px;" id="male_over1"></a>
+                </div>
+            </div>
+            <div class="ui medium images" id="female_body">
+                <div id = "body_images">
+                    <a href="#" id="female_under"><img src="src/female_underweight.jpg" style="padding: 30px;" id="female_under1"></a> 
+                    <a href="#" id="female_normal"><img src="src/female_normalweight.jpg" style="padding: 30px;" id="female_normal1"></a>
+                    <a href="#" id="female_over"><img src="src/female_overweight.jpg" style="padding: 30px;" id="female_over1"></a>
+                </div>
+            </div>
+            <button class="ui blue button" id="to_body">Next</button>
+        </div>
+        <div id="body_goal">
+            <span class="logo">
+                <p>LunchBöx</p>
+            </span>
+            <p id="goals_text">What is your body goal?</p>
+            <div class="massive ui buttons" id="goals">
+                <button class="ui inverted secondary button" id="lose_weight_button">Lose Weight</button>
+                <button class="ui inverted secondary button" id="maintain_weight_button">Maintain Weight</button>
+                <button class="ui inverted secondary button" id="gain_weight_button">Gain Weight</button>
+            </div>
+            <button class="ui blue button" id="to_diet">Next</button>
+        </div>
+        <div id="diet">
+            <span class="logo">
+                <p>LunchBöx</p>
+            </span>
+            <p id="diet_text">Diet Preference:</p>
+            <div class="massive ui buttons" id="diets">
+                <button class="ui inverted secondary button" id="meats">Meats</button>
+                <button class="ui inverted secondary button" id="vegetarian">Vegetarian</button>
+                <button class="ui inverted secondary button" id="pescetarian">Pescetarian</button>
+            </div>
+            <button class="ui blue button" id="to_feed">Next</button>
+        </div>
+        
+        <!--darian/jacob-->
+        <div id="feed">
+            <div class ="logo">
+                <h3>LunchBox</h3>
+            </div>
+            <!-- <div class = "feed-entry" >
+                <div class = "feed-title">
+                    <h2 class = "dish_name">Beef and Broccoli</h2>
+                    <button class="btn">Add to cart</button>
+                </div>
+                <img id="test" class = "pics" src = "src/bAndb.jpg">
+                <p id = "insert_text"></p>
+            </div>
+
+            <div class = "feed-entry" >
+                <div class = "feed-title">
+                    <h2 class = "dish_name">Sweet and Sour Chicken</h2>
+                    <button class="btn">Add to cart</button>
+                </div>
+                <img id="test1" class = "pics" src = "src/chicken.jpeg">
+                <p id = "insert_chicken"></p>
+            </div>
+
+            <div class = "feed-entry" >
+                <div class = "feed-title">
+                    <h2 class = "dish_name">Walnut and Lentil Bolognese</h2>
+                    <button class="btn">Add to cart</button>
+                </div>
+                <img id="test2" class = "pics" src = "src/veg.webp">
+                <p id = "insert_veg"></p>
+            </div> -->
+
+            <div id="feed-entries">
+                
+            </div>
+
+            <button class="ui blue button" id="to_cart">Next</button>
+        </div>
+
+        
+        <!--phil-->
+        <div id="shopping-cart">
+            <div class="sticky-tab">
+                <div class="macros">
+                    Wanted macros:
+                    <span id="wanted-macros" class="macro-num">
+                        <span id="w-calorie-count">0</span> cal,
+                        <span id="w-fat-count">0</span>g F,
+                        <span id="w-carb-count">0</span>g C,
+                        <span id="w-protein-count">0</span>g P
+                        <span class="abbreviation-help"></span>
+                    </span>
+                </div>
+                <div class="macros">
+                    Picked macros:
+                    <span id="picked-macros" class="macro-num">
+                        <span id="p-calorie-count">0</span> cal,
+                        <span id="p-fat-count">0</span>g F,
+                        <span id="p-carb-count">0</span>g C,
+                        <span id="p-protein-count">0</span>g P
+                        <span class="abbreviation-help"></span>
+                    </span>
+                </div>
+            </div>
+        
+            <div id="wrapper">
+                <div id="main-body">
+                    <ul id="recipe-list" class="list-no-style">
+                        <!--<li class="recipe-list-item">
+                            <div class="recipe-card-image">
+                                <img src="src/Slow-Cooker-Chicken-Tacos.jpg" alt="">
+                            </div>
+                            <div class="recipe-title">Slow Cooker Chicken Tacos</div>
+                            <div class="recipe-macros">
+                                <span id="" class="calorie-count">600</span> calories,
+                                <span id="" class="fat-count">12</span>g fats,
+                                <span id="" class="carb-count">15</span>g carbs,
+                                <span id="" class="protein-count">21</span>g protein
+                            </div>
+                        </li>
+                        <li class="recipe-list-item">
+                            <div class="recipe-card-image">
+                                <img src="src/alfredo-dijon-turkey-sandwich_900x600.jpg" alt="">
+                            </div>
+                            <div class="recipe-title">Alfredo Dijon Turkey Sandwich</div>
+                            <div class="recipe-macros">
+                                <span id="" class="calorie-count">10</span> calories,
+                                <span id="" class="fat-count">100</span>g fats,
+                                <span id="" class="carb-count">50</span>g carbs,
+                                <span id="" class="protein-count">1</span>g protein
+                            </div>
+                        </li>
+                        <li class="recipe-list-item">
+                            <div class="recipe-card-image">
+                                <img src="src/chicken_and_rice.jpg" alt="">
+                            </div>
+                            <div class="recipe-title">Chicken And Rice</div>
+                            <div class="recipe-macros">
+                                <span id="" class="calorie-count">10</span> calories,
+                                <span id="" class="fat-count">100</span>g fats,
+                                <span id="" class="carb-count">50</span>g carbs,
+                                <span id="" class="protein-count">1</span>g protein
+                            </div>
+                        </li>
+                        <li class="recipe-list-item">
+                            <div class="recipe-card-image">
+                                <img src="src/Chicken-salad.jpg" alt="">
+                            </div>
+                            <div class="recipe-title">Chicken Salad</div>
+                            <div class="recipe-macros">
+                                <span id="" class="calorie-count">10</span> calories,
+                                <span id="" class="fat-count">100</span>g fats,
+                                <span id="" class="carb-count">50</span>g carbs,
+                                <span id="" class="protein-count">1</span>g protein
+                            </div>
+                        </li>
+                        <li class="recipe-list-item">
+                            <div class="recipe-card-image">
+                                <img src="src/Creamy-Garlic-Chicken-Pasta-with-Tomato-and-Spinach.jpg" alt="">
+                            </div>
+                            <div class="recipe-title">Creamy Garlic Chicken Pasta</div>
+                            <div class="recipe-macros">
+                                <span id="" class="calorie-count">10</span> calories,
+                                <span id="" class="fat-count">100</span>g fats,
+                                <span id="" class="carb-count">50</span>g carbs,
+                                <span id="" class="protein-count">1</span>g protein
+                            </div>
+                        </li>
+                        <li class="recipe-list-item">
+                            <div class="recipe-card-image">
+                                <img src="src/Healthy-Creamy-Coconut-Sweet-Potato-Curry-Recipe-with-spinach-and-rice.jpg" alt="">
+                            </div>
+                            <div class="recipe-title">Creamy Cocout Sweet Potato Curry</div>
+                            <div class="recipe-macros">
+                                <span id="" class="calorie-count">10</span> calories,
+                                <span id="" class="fat-count">100</span>g fats,
+                                <span id="" class="carb-count">50</span>g carbs,
+                                <span id="" class="protein-count">1</span>g protein
+                            </div>
+                        </li>
+                        <li class="recipe-list-item">
+                            <div class="recipe-card-image">
+                                <img src="src/Salmon-Poke-Bowl.jpg" alt="">
+                            </div>
+                            <div class="recipe-title">Salmon Poke Bowl</div>
+                            <div class="recipe-macros">
+                                <span id="" class="calorie-count">10</span> calories,
+                                <span id="" class="fat-count">100</span>g fats,
+                                <span id="" class="carb-count">50</span>g carbs,
+                                <span id="" class="protein-count">1</span>g protein
+                            </div>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<script src='scripts/feed.js'></script>
+</body>
+
+</html>

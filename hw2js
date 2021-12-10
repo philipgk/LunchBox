@@ -1,0 +1,644 @@
+// ===================== Fall 2021 EECS 493 Assignment 2 =====================
+// This starter code provides a structure and helper functions for implementing
+// the game functionality. It is a suggestion meant to help you, and you are not
+// required to use all parts of it. You can (and should) add additional functions
+// as needed or change existing functions.
+
+// ==============================================
+// ============ Page Scoped Globals Here ========
+// ==============================================
+
+// variables
+let game_window;
+let player;
+let cometID = 1;
+let vaccineID = 1;
+let maskID = 1;
+let clickedPlay = false;
+let mainMenu;
+let settings;
+let tutorial;
+let game;
+let difficulty = "normal";
+let learned = false;
+let alive;
+let maskOn;
+var cometInterval;
+var maskInterval;
+var vaccineInterval;
+var spawnCometInterval;
+var scoreInterval;
+var playerMove;
+var start = false;
+
+// audio
+let collectSound = new Audio('../src/audio/collect.mp3');
+let dieSound = new Audio('../src/audio/die.mp3');
+
+// Game Object Helpers
+let AST_OBJECT_REFRESH_RATE = 30;    // Refresh rate for asteroids in ms
+let COMET_SPEED;                     // speed of Comet in px
+let AST_SPAWN_RATE;                  // Spawn rate of asteroiods in ms
+let VACC_SPAWN_RATE = 20000;
+let MASK_SPAWN_RATE = 15000;
+// Every time the level increases (i.e. when the player gets a vaccine), the comet’s speed increases by a certain constant multiple.
+let speedFactor;
+let maxPersonPosX = 1218; 
+let maxPersonPosY = 658;
+let PERSON_SPEED = 15;               // Speed of the person (px)
+let vaccineOccurrence = 20000;       // Vaccine spawns every 20 seconds
+let vaccineGone = 5000;              // Vaccine disappears in 5 seconds
+let maskOccurrence = 15000;          // Masks spawn every 15 seconds
+let maskGone = 5000;                 // Mask disappears in 5 seconds
+
+// Movement Helpers
+var LEFT = false;
+var RIGHT = false;
+var UP = false;
+var DOWN = false;
+var touched = false;
+
+// ==============================================
+// ============ Functional Code Here ============
+// ==============================================
+
+// Main
+$(document).ready(function () {
+    // ====== Startup ====== 
+    console.log("Ready")
+    game_window = $('.game-window');
+    player = $('#player');
+    mainMenu = $('#main_menu');
+    settings = $('#settings');
+    tutorial = $('#tutorial');
+    game = $('#actual_game');
+    asteroidSection = $('.asteroidSection');
+    splashScreen = $('#splashScreen');
+    game_right_section = $('#game_right_section');
+    game_over = $('#game_over');
+
+    //hide screens
+    settings.hide();
+    tutorial.hide();
+    game.hide();
+    asteroidSection.hide();
+    player.hide();
+    splashScreen.hide();
+    game_right_section.hide();
+    game_over.hide();
+    $('#normal').css("border-color", "yellow");
+
+    //open settings
+    $("#settings_button").click(function(){
+      $('#play_button').hide(1);
+      $('#settings_button').hide(1);
+      settings.show(1);
+
+      // change scroll bar value
+      var slider = document.getElementById("myRange");
+      var output = document.getElementById("demo");
+      output.innerHTML = slider.value;
+      slider.oninput = function() {
+        output.innerHTML = this.value;
+        // adjust volume of sounds [0, 1]
+        collectSound.volume = this.value / 100;
+        dieSound.volume = this.value / 100;
+      }
+      
+      // click on a difficulty button highlights it 
+      $('#easy').click(function(){
+        $('#hard').css("border-color", "transparent");
+        $('#normal').css("border-color", "transparent");
+        $('#easy').css("border-color", "yellow");
+        difficulty = "easy";
+      })
+      $('#normal').click(function(){
+        $('#easy').css("border-color", "transparent");
+        $('#hard').css("border-color", "transparent");
+        $('#normal').css("border-color", "yellow");
+        difficulty = "normal";
+      })
+      $('#hard').click(function(){
+        $('#easy').css("border-color", "transparent");
+        $('#normal').css("border-color", "transparent");
+        $('#hard').css("border-color", "yellow");
+        difficulty = "hard";
+      })
+      // click 'close' to exit
+      $('#close').click(function(){
+        settings.hide(1);
+        $('#play_button').show(1);
+        $('#settings_button').show(1);
+      })
+    });
+
+    //open play
+    $('#play_button').click(function(){
+      alive = true;
+      mainMenu.hide(1);
+      //Set covid danger level and comet speed
+      if(difficulty == "easy"){
+        $('#covid_danger_num').text("10");
+        COMET_SPEED = 10 / 3;
+        AST_SPAWN_RATE = 1000;
+      }
+      else if (difficulty == "normal"){
+        $('#covid_danger_num').text("20");
+        COMET_SPEED = 10;
+        AST_SPAWN_RATE = 800;
+      }
+      else{
+        $('#covid_danger_num').text("30");
+        COMET_SPEED = (10 / 3) * 5;
+        AST_SPAWN_RATE = 600;
+      }
+
+      //show tutorial if haven't learned yet
+      if(learned === false){
+        tutorial.show(1);
+        //click 'start' to start
+      }
+      else {
+        game.show(1);
+        splashScreen.show(1);
+        game_right_section.show(1);
+        //make splash screen disappear
+        setTimeout(function(){
+          splashScreen.hide(1);
+          asteroidSection.show(1);  
+          startGame();
+        }, 3000);
+      }
+    });
+
+    // start from tutorial
+    $('#tutorial_button').click(function(){
+      tutorial.hide(1);
+      game.show(1);
+      splashScreen.show(1);
+      game_right_section.show(1);
+      learned = true;
+      //make splash screen disappear
+      setTimeout(function(){
+        splashScreen.hide(1);
+        asteroidSection.show(1);  
+        startGame();
+      }, 3000);
+      
+    });
+});
+
+// TODO: ADD YOUR FUNCTIONS HERE
+
+function startGame(){
+  if(alive === true){
+    console.log("Start Game");
+    //set player movement interval
+    playerMove = setInterval(movePlayer, 40);
+    //allow player to move now
+    start = true;
+    player.show(1);
+    //update score
+    scoreInterval = setInterval(function(){
+      let updatedScore = parseInt($('#score_num').text());
+      updatedScore = updatedScore + 40;
+      $('#score_num').text(updatedScore);
+    }, 500);
+    //spawn comets
+    spawnCometInterval = setInterval(createComet, AST_SPAWN_RATE);
+    //spawn vaccines and masks
+    createVaccine();
+    createMask();
+    //check collisions
+    setInterval( function() {
+      checkCollisions(); 
+    }, 100);  
+  }
+}
+
+// // which key was pressed
+// function keyPressRouter(event) {
+//   switch(event) {
+//     case UP:
+//     case DOWN: 
+//     case LEFT: 
+//     case RIGHT:
+//       console.log("Arrow key pressed!");
+//       movePlayer(event); 
+//       break;
+//     default: 
+//       console.log("INVALID INPUT!!!!");       
+//       break;
+
+//   }
+// }
+
+// Keydown event handler
+document.onkeydown = function(e) {
+    if(start == false){
+        
+    }
+    else{
+    if (e.key == "ArrowLeft"){
+      LEFT = true;
+      if(!maskOn) $('#face').attr("src", "../src/player/player_left.gif");
+      else $('#face').attr("src", "../src/player/player_masked_left.gif");
+    }
+    if (e.key == "ArrowRight"){
+      RIGHT = true;
+      if(!maskOn) $('#face').attr("src", "../src/player/player_right.gif");
+      else $('#face').attr("src", "../src/player/player_masked_right.gif");
+    } 
+    if (e.key == "ArrowUp"){
+      UP = true;
+      if(!maskOn) $('#face').attr("src", "../src/player/player_up.gif");
+      else $('#face').attr("src", "../src/player/player_masked_up.gif");
+    } 
+    if (e.key == "ArrowDown") {
+      DOWN = true;
+      if(!maskOn) $('#face').attr("src", "../src/player/player_down.gif");
+      else $('#face').attr("src", "../src/player/player_masked_down.gif");
+    }
+    if(alive == false){
+      $('#face').attr("src", "../src/player/player_touched.gif");
+    }
+  }
+    
+}
+
+// Keyup event handler
+document.onkeyup = function (e) {
+    if (e.key == "ArrowLeft") {
+      LEFT = false;
+      if(!maskOn) $('#face').attr("src", "../src/player/player.gif");
+      else $('#face').attr("src", "../src/player/player_masked.gif");
+    }
+    if (e.key == "ArrowRight") {
+      RIGHT = false;
+      if(!maskOn) $('#face').attr("src", "../src/player/player.gif");
+      else $('#face').attr("src", "../src/player/player_masked.gif");
+    }
+    if (e.key == "ArrowUp") {
+      UP = false;
+      if(!maskOn) $('#face').attr("src", "../src/player/player.gif");
+      else $('#face').attr("src", "../src/player/player_masked.gif");
+    }
+    if (e.key == "ArrowDown") {
+      DOWN = false;
+      if(!maskOn) $('#face').attr("src", "../src/player/player.gif");
+      else $('#face').attr("src", "../src/player/player_masked.gif");
+    }
+    if(alive == false){
+      $('#face').attr("src", "../src/player/player_touched.gif");
+    }
+    
+}
+
+// Move the player
+function movePlayer() {
+    if(LEFT){ 
+      console.log("moving left"); 
+      var newPos = parseInt(player.css("left")) - PERSON_SPEED; 
+      if (newPos < 0) {
+        newPos = 0; 
+      }
+      player.css("left", newPos); 
+    }
+    if(UP){ 
+      console.log("moving up"); 
+      var newPos = parseInt(player.css("top")) - PERSON_SPEED;
+      if (newPos < 0) {
+        newPos = 0; 
+      }
+      player.css("top", newPos); 
+    }
+    if(DOWN){ 
+      console.log("moving down"); 
+      var newPos = parseInt(player.css("top")) + PERSON_SPEED;
+      if (newPos > maxPersonPosY) {
+        newPos = maxPersonPosY; 
+      }
+      player.css("top", newPos); 
+    }
+    if (RIGHT){ 
+      console.log("moving right"); 
+      var newPos = parseInt(player.css("left")) + PERSON_SPEED; 
+      if (newPos > maxPersonPosX) {
+        newPos = maxPersonPosX; 
+      }
+      player.css("left", newPos); 
+    }
+}
+
+//Create covid comets
+function createComet(){
+  //console.log('Creating Covid Comet');
+  // create each UNIQUE comet
+  let cometDivStr = "<div id='r-" + cometID + "' class='comet'> <img src='../src/covidstriod.png' class='cometSize'></div>";
+  // add to game window
+  game.append(cometDivStr);
+  
+  let curComet= $("#r-" + cometID);
+  cometID++;
+
+  // Make them spawn randomly 
+  let randomPosition = Math.floor(getRandomNumber(0, 4));
+
+  // 0 - [0, Y] spawns left side
+  if (randomPosition === 0){
+    xPos = 0;
+    yPos = getRandomNumber(0, parseInt(game.css("height")));
+  }
+  // 1 - [max_width, Y] spawns right side
+  else if (randomPosition === 1){
+    xPos = parseInt(game.css("width")) - 62;
+    yPos = getRandomNumber(0, parseInt(game.css("height")));
+  }
+  // 2 - [X, 0] spawns top side
+  else if (randomPosition === 2){
+    xPos = getRandomNumber(0, parseInt(game.css("width")));
+    yPos = 0;
+  }
+  // 3 - [X, max_height] spawns bottom side
+  else{
+    xPos = getRandomNumber(0, parseInt(game.css("width")));
+    yPos = parseInt(game.css("height")) - 62; 
+  }
+
+  //console.log(randomPosition);
+  // set xPos and yPos to curComet
+  curComet.css("left", xPos + "px");
+  curComet.css("top", yPos + "px"); 
+
+  // Comet Movement
+  let randomDirection = Math.floor(getRandomNumber(0,2));
+  //First generate a random number from 0 to n for speedX
+  let xSpeed = getRandomNumber(0, COMET_SPEED);
+  //speedY as square root of (n^2 - speedX^2)
+  let ySpeed = Math.sqrt(Math.pow(COMET_SPEED, 2) - Math.pow(xSpeed, 2));
+  cometInterval = setInterval(function() {
+    // 0 - [0, Y] spawns left side -> move right, can move up or down
+    if (randomPosition === 0){
+      if (randomDirection === 0){
+        curComet.css("top", parseInt(curComet.css("top")) - ySpeed);
+      }
+      else{
+        curComet.css("top", parseInt(curComet.css("top")) + ySpeed);
+      }
+      curComet.css("left", parseInt(curComet.css("left")) + xSpeed);
+      // Goes off screen on the top, bottom, or right
+      if (parseInt(curComet.css("left")) > (parseInt(game.css("width")) - 62) ||
+          parseInt(curComet.css("top")) < 0 || 
+          parseInt(curComet.css("top")) > (parseInt(game.css("height")) - 62)) {
+            curComet.remove();
+      }
+    }
+    // 1 - [max_width, Y] spawns right side -> move left, can move up or down
+    else if (randomPosition === 1){
+      if (randomDirection === 0){
+        curComet.css("top", parseInt(curComet.css("top")) - ySpeed);
+      }
+      else{
+        curComet.css("top", parseInt(curComet.css("top")) + ySpeed);
+      }
+      curComet.css("left", parseInt(curComet.css("left")) - xSpeed);
+      // Goes off screen on the top, bottom, or left
+      if (parseInt(curComet.css("left")) < 0 ||
+          parseInt(curComet.css("top")) < 0 || 
+          parseInt(curComet.css("top")) > (parseInt(game.css("height")) - 62)) {
+            curComet.remove();
+      }
+    }
+    // 2 - [X, 0] spawns top side -> move down, can move left or right
+    else if (randomPosition === 2){
+      if (randomDirection === 0){
+        curComet.css("left", parseInt(curComet.css("left")) - xSpeed);
+      }
+      else{
+        curComet.css("left", parseInt(curComet.css("left")) + xSpeed);
+      }
+      curComet.css("top", parseInt(curComet.css("top")) + ySpeed);
+      // Goes off screen on the left, right, or bottom
+      if (parseInt(curComet.css("left")) < 0 ||
+          parseInt(curComet.css("left")) > (parseInt(game.css("width")) - 62) || 
+          parseInt(curComet.css("top")) > (parseInt(game.css("height")) - 62)) {
+            curComet.remove();
+      }
+    }
+    // 3 - [X, max_height] spawns bottom side -> move up
+    else{
+      if (randomDirection === 0){
+        curComet.css("left", parseInt(curComet.css("left")) - xSpeed);
+      }
+      else{
+        curComet.css("left", parseInt(curComet.css("left")) + xSpeed);
+      }
+      curComet.css("top", parseInt(curComet.css("top")) - ySpeed);
+      // Goes off screen on the left, right, or top
+      if (parseInt(curComet.css("left")) < 0 ||
+          parseInt(curComet.css("left")) > (parseInt(game.css("width")) - 62) || 
+          parseInt(curComet.css("top")) < 0) {
+            curComet.remove();
+      }
+    }
+    
+  }, AST_OBJECT_REFRESH_RATE);
+}
+
+//create vaccine
+function createVaccine(){
+  vaccineInterval = setInterval(function() {
+    console.log('Creating Vaccine');
+    // create each UNIQUE vaccine
+    let vaccineDivStr = "<div id='r-" + vaccineID + "' class='vaccine'> <img src='../src/vacc.gif' class='vaccineSize'></div>";
+    // add to game window
+    game.append(vaccineDivStr);
+    
+    let curVaccine= $("#r-" + vaccineID);
+    vaccineID++;
+
+    // Make them spawn randomly 
+    let xPos = getRandomNumber(0, parseInt(game.css("width")) - 57);
+    let yPos = getRandomNumber(0, parseInt(game.css("height")) - 57);
+    console.log(xPos);
+    console.log(yPos);
+
+    // set xPos and yPos to curComet
+    curVaccine.css("left", xPos + "px");
+    curVaccine.css("top", yPos + "px"); 
+    
+    setTimeout(function(){
+      curVaccine.remove();
+      console.log("removing vaccine");
+    }, 5000);
+
+  }, VACC_SPAWN_RATE);
+}
+
+//create mask
+function createMask(){
+  maskInterval = setInterval(function() {
+    console.log('Creating Mask');
+    // create each UNIQUE vaccine
+    let maskDivStr = "<div id='r-" + maskID + "' class='mask'> <img src='../src/mask.gif' class='maskSize'></div>";
+    // add to game window
+    game.append(maskDivStr);
+    
+    let curMask= $("#r-" + maskID);
+    maskID++;
+
+    // Make them spawn randomly 
+    let xPos = getRandomNumber(0, parseInt(game.css("width")) - 70);
+    let yPos = getRandomNumber(0, parseInt(game.css("height")) - 33);
+
+    // set xPos and yPos to curComet
+    curMask.css("left", xPos + "px");
+    curMask.css("top", yPos + "px"); 
+
+    setTimeout(function(){
+      curMask.remove();
+      console.log("removing mask");
+    }, 5000);
+
+  }, MASK_SPAWN_RATE);
+}
+
+function checkCollisions(){
+  //comet collision
+  
+  $('.comet').each( function() {
+    let curComet = $(this); 
+    if (isColliding(player, curComet)) {
+      if(maskOn){
+        curComet.remove();
+        maskOn = false;
+        $('#face').attr("src", "../src/player/player.gif");
+      }
+      else{
+        $('#face').attr("src", "../src/player/player_touched.gif");
+        dieSound.play();
+        alive = false;
+        //stop score from increasing and save it
+        clearInterval(scoreInterval);
+        let score = $('#score_num').text();
+        $('#final_score').text(score);
+        //stop player from moving
+        clearInterval(playerMove);
+        //stops comets from moving and spawning
+        $('.comet').each( function() {
+          clearInterval(spawnCometInterval);
+          clearInterval(cometInterval); 
+        });
+        //stop vaccines from spawning
+        clearInterval(vaccineInterval);
+        //stops masks from spawning
+        clearInterval(maskInterval);
+        setTimeout(function(){
+          game.hide(1);
+          mainMenu.show(1);
+          $('#play_button').hide(1);
+          $('#settings_button').hide(1);
+          game_over.show(1);
+          //start over button
+          $('#start_over').click(function(){
+            game_over.hide(1);
+            $('#play_button').show(1);
+            $('#settings_button').show(1);
+            reset();
+          });
+        }, 2000);
+      }
+    }
+  });
+  //vaccine collision
+  $('.vaccine').each( function() {
+    let curVaccine = $(this); 
+    if (isColliding(player, curVaccine)) {
+      collectSound.play();
+      curVaccine.remove();
+      let update_danger_num = parseInt($('#covid_danger_num').text()) + 2;
+      $('#covid_danger_num').text(update_danger_num);
+      let update_level = parseInt($('#covid_level').text()) + 1;
+      $('#covid_level').text(update_level);
+      COMET_SPEED *= 1.2;
+    }
+  });
+  //mask collision
+  $('.mask').each( function() {
+    let curMask = $(this); 
+    if (isColliding(player, curMask)) {
+      collectSound.play();
+      curMask.remove();
+      $('#face').attr("src", "../src/player/player_masked.gif");
+      maskOn = true;
+    }
+  });
+}
+
+function reset(){
+  $('#score_num').text("0");
+  $('#covid_level').text("1");
+  player.hide(1);
+  player.css("left", "600px");
+  player.css("top", "300px");
+  $('#face').attr("src", "../src/player/player.gif");
+  //reset game elements
+  $('.mask').each( function() {
+    let cur = $(this); 
+    cur.remove();
+  });
+  $('.comet').each( function() {
+    let cur = $(this); 
+    cur.remove();
+  });
+  $('.vaccine').each( function() {
+    let cur = $(this); 
+    cur.remove();
+  });
+}
+//===================================================
+
+// ==============================================
+// =========== Utility Functions Here ===========
+// ==============================================
+
+// Are two elements currently colliding?
+function isColliding(o1, o2) {
+  return isOrWillCollide(o1, o2, 0, 0);
+}
+
+// Will two elements collide soon?
+// Input: Two elements, upcoming change in position for the moving element
+function willCollide(o1, o2, o1_xChange, o1_yChange){
+  return isOrWillCollide(o1, o2, o1_xChange, o1_yChange);
+}
+
+// Are two elements colliding or will they collide soon?
+// Input: Two elements, upcoming change in position for the moving element
+// Use example: isOrWillCollide(paradeFloat2, person, FLOAT_SPEED, 0)
+function isOrWillCollide(o1, o2, o1_xChange, o1_yChange){
+  const o1D = { 'left': o1.offset().left + o1_xChange,
+        'right': o1.offset().left + o1.width() + o1_xChange,
+        'top': o1.offset().top + o1_yChange,
+        'bottom': o1.offset().top + o1.height() + o1_yChange
+  };
+  const o2D = { 'left': o2.offset().left,
+        'right': o2.offset().left + o2.width(),
+        'top': o2.offset().top,
+        'bottom': o2.offset().top + o2.height()
+  };
+  // Adapted from https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+  if (o1D.left < o2D.right &&
+    o1D.right > o2D.left &&
+    o1D.top < o2D.bottom &&
+    o1D.bottom > o2D.top) {
+     // collision detected!
+     return true;
+  }
+  return false;
+}
+
+// Get random number between min and max integer
+function getRandomNumber(min, max){
+  return (Math.random() * (max - min)) + min;
+}

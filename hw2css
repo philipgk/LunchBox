@@ -1,0 +1,280 @@
+/* Main Containers */
+body, button {
+  font-family: VT323;
+}
+
+button {
+  font-size: 40px;
+  width: 200px;
+  height: 100px;
+  background-color: #A00;
+  /*flexbox for centering button contents*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#header{
+  background-color: #800;
+  color: black; 
+  border-bottom: 6px;
+  border-bottom-style: groove;
+  width: 100%;
+  height: 100px;
+  font-size: 100px;
+  text-align: center;
+  /*flexbox stuff*/
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.outer-container {
+  height: 720px;
+  width: 1280px;
+  background: #eee;
+  border: 5px solid gainsboro;
+}
+
+.game-window {
+  height: 720px;
+  width: 1280px;
+  float: left;
+  position: relative;
+}
+  
+/* Game Section --- Right Section */
+
+#actual_game{
+    height: 720px;
+    width: 1280px;
+    background-color: black;
+    z-index: 10;
+    right: 0px;
+    top: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#game_right_section {
+    height: 600px;
+    width: 320px;
+    position: absolute;
+    left: 960px;
+    top: 0px;
+    color: white;
+    z-index: 1;
+}
+
+#scoreword, #covid_danger, #level {
+  text-align:center;
+  font-size: 60px;
+}
+
+#score_num, #covid_danger_num, #covid_level {
+  text-align: center;
+  font-size: 40px;
+  color: yellow;
+}
+
+#player {
+  position: absolute;
+  width: 62px;
+  left: 600px;
+  top: 300px;
+  z-index: 9;
+}
+
+.cometSize {
+  height: 62px;
+  width: 62px;
+}
+
+/* Add your styling here */
+
+/*main menu*/
+#covid_background{
+  background-image: url("../src/frontpage_background.jpg");
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  /*Flexbox*/
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 100px;
+}
+
+/*settings*/
+
+/*slider stuff*/
+.slidecontainer {
+  display: block;
+  padding: 50px;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 25px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #04AA6D;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #04AA6D;
+  cursor: pointer;
+}
+
+#settings {
+  background-color: blue;
+  /*fill entire screen*/
+  background-size: cover;
+  position: absolute;
+  top: 57.5%;
+  left: 50%;
+  /*x and y axis*/
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 808px;
+  z-index: 10;
+  border-style: solid;
+  border-color: #eee;
+}
+
+#settings p{
+  text-align: center;
+  color: white;
+  font-size: 35px;
+}
+
+#difficulty {
+  /*centers difficulty buttons*/
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#close_button{
+  position: absolute;
+  left: 50%;
+  bottom:0;
+  /*centers close button according to parent container*/
+  transform: translate(-50%, -50%);
+}
+
+#easy{
+  margin: 10px;
+}
+
+#normal{
+  margin: 10px;
+}
+
+#hard{
+  margin: 10px;
+}
+
+/*tutorial*/
+#tutorial{
+  text-align: center;
+  font-size: 45px;
+  background-color: gainsboro;
+  /*fill entire screen*/
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+}
+
+#tutorial_button{
+  position: absolute;
+  left: 50%;
+  bottom:0;
+  /*centers close button according to parent container*/
+  transform: translate(-50%, -50%);
+  background-color: transparent;
+}
+
+/*splash screen*/
+#splashScreen{
+  font-size: 60px;
+  color: white;
+  /*position center*/
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+}
+
+/*Game over*/
+#game_over{
+  background-color: #800;
+  /*fill entire screen*/
+  position: absolute;
+  top: 57.5%;
+  left: 50%;
+  /*x and y axis*/
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 200px;
+  color: blue;
+}
+
+#start_over{
+  background-color: white;
+  width: 200px;
+  height: 50px;
+}
+
+#contents{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.vaccineSize{
+  width: 57px;
+  height: 57px;
+}
+
+.maskSize{
+  width: 70px;
+  height: 33px;
+}
+
+.vaccine{
+  position: absolute;
+}
+
+.mask{
+  position: absolute;
+}
+
+.comet{
+  position: absolute;
+}
+
